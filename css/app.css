@@ -1,0 +1,193 @@
+/*
+ * CSS FILE DIVIDED IN 2 SECTIONS
+ * - DEFAULT CSS ATTRIBUTES FOR HTML TAGS
+ * - CSS CLASSES FOR QUIZ
+ */
+
+/* **** DEFAULT CSS ATTRIBUTES FOR HTML TAGS **** */
+
+html, body {
+	font-family: Arial, sans serif;
+	font-size: 1em;
+	color: #000000;
+	overflow: hidden;
+	overflow-x: hidden;
+	overflow-y: hidden;
+	height: 100%;
+	background-color: #000000;
+	cursor: no-drop;
+}
+
+.clearfix_no_margin {
+	clear: both;
+}
+
+.clearfix {
+	clear: both;
+	margin-bottom: 10px;
+}
+
+/* **** CSS CLASSES FOR QUIZ **** */
+
+#container {
+	width: 800px;
+	height: 100%;
+	background-color: #eeeeee;
+	position: absolute;
+	top:0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: auto;	
+	padding: 20px;
+	display: table;
+}
+
+#middle {
+	display: table-cell;
+	vertical-align: middle;
+	padding: 0px;
+	width: 100%;
+	height: 100%;
+}
+
+#innerContainer {
+	margin-left: auto;
+	margin-right: auto;
+	width: 100%;
+	height: 100%;
+	background-color: #ffffff;
+	border: 1px solid black;
+	padding: 0px;
+}
+
+#content {
+	margin: 20px;
+	height: 100%;
+}
+
+#title {
+	font-weight: bold;
+	color: #000066;
+	float: left;
+}
+
+#elapsedTime {
+	float: right;
+	margin-top: 2px;
+	margin-right: 2px;
+	font-size: 0.8em;
+	
+}
+
+.header {
+	
+}
+
+.headerRow {
+	display: block;
+	margin-bottom:20px;
+}
+
+.headerLeft {
+	float:left;
+}
+
+#score {
+	
+}
+
+#undo {
+	cursor: pointer;	
+}
+
+.headerRight {
+	float:right;
+}
+
+#controlButton {
+	cursor: pointer;
+}
+
+#gameArea {
+
+}
+
+#termsContainer {
+	float: left;
+	width: 300px;
+	background-color: #ee0000;
+	padding: 10px 10px 0px 10px;
+	color: #ffffff;
+	font-weight: bold;
+}
+
+#definitionsContainer {
+	float:right;
+	width: 410px;
+	background-color: #0000ee;
+	padding: 10px 10px 0px 10px;
+	color: #ffffff;
+	font-weight: bold;
+	
+}
+
+.termWidget {
+	
+	vertical-align: middle;
+	display: table-cell;
+	text-align: center;
+	border: 1px solid black;
+	background-color: #333333;
+	color: #ffffff;
+	font-size: 2em;
+	display: block;
+	width: 100%;
+	margin-bottom: 10px;
+	-webkit-user-select: none; /* Safari */        
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* IE10+/Edge */
+	user-select: none; /* Standard */
+	cursor: grab;
+}
+
+.definitionWidget {
+	width: 100%;	
+	// background-color: #999999;
+	color: #ffffff;
+	-webkit-user-select: none; /* Safari */        
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* IE10+/Edge */
+	user-select: none; /* Standard */
+	cursor: pointer;
+	
+}
+
+.droppedTerm {
+	width: 35%;
+	background-color: #00ffff;
+	float: left;
+	margin-bottom: 10px;
+	padding: 10px;
+	color: black;
+	height: inherit;
+	-webkit-user-select: none; /* Safari */        
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* IE10+/Edge */
+	user-select: none; /* Standard */
+	cursor: pointer;
+}
+
+.definitionText {
+	width: 52%;
+	background-color: #ff00ff;
+	float: right;
+	margin-bottom: 10px;
+	padding: 10px;
+	-webkit-user-select: none; /* Safari */        
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* IE10+/Edge */
+	user-select: none; /* Standard */
+	cursor: pointer;
+}
+
