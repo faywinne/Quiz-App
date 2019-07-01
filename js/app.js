@@ -97,6 +97,9 @@ $.ready(function() {
 	}
 
 	function setupQuiz() {
+		var button = $.get('controlButton');
+		button.value="Play";
+		button.disabled=false;
 		var terms = termsContainer.getElementsByClassName("termWidget");
 		for (var i = 0; i < terms.length; i++) {
 			hideTerm(terms[i]);
@@ -104,6 +107,9 @@ $.ready(function() {
 	}
 
 	function startQuiz() {
+		var button = $.get('controlButton');
+		button.value="End";
+		button.disabled=false;
 		var terms = termsContainer.getElementsByClassName("termWidget");
 		for (var i = 0; i < terms.length; i++) {
 			restoreTerm(terms[i]);
@@ -111,11 +117,19 @@ $.ready(function() {
 	}
 
 	function endQuiz() {
-
+		var button = $.get('controlButton');
+		button.value="Score";
+		button.disabled=false;
+		var terms = document.getElementsByClassName("termWidget");
+		for (var i = 0; i < terms.length; i++) {
+			terms[i].draggable = false;
+		}
 	}
 
-	function score() {
-
+	function scoreQuiz() {
+		var button = $.get('controlButton');
+		button.value="Start";
+		button.disabled = true;
 	}
 
 	var changeButton = function(e) {
@@ -123,14 +137,12 @@ $.ready(function() {
 		switch(val) {
 			case "Play":
 				startQuiz();
-				e.target.value = "End";
 			break;
 			case "End":
-				e.target.value = "Score";
+				endQuiz();
 			break;
 			case "Score":
-				e.target.value = "Play";
-				e.target.disabled = true;
+				scoreQuiz();
 			break;
 		}
 	}
