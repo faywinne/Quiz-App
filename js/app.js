@@ -21,7 +21,10 @@ $.ready(function() {
 		var dragEl = $.get(data);
 		//e.target.innerHTML = dragEl.innerHTML;
 		//dragEl.innerHTML = "";
-		e.target.appendChild(dragEl);
+		var newDragEl = dragEl.cloneNode(true);
+		newDragEl.id = "new_"+data;
+		e.target.appendChild(newDragEl);
+		dragEl.style.visibility = "hidden";
 	}
 
 	function dragOverItemFunc(e) {
