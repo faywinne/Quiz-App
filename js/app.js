@@ -246,6 +246,10 @@ $.ready(function() {
 			let userDefIndex = term.parentNode.getAttribute("index"); //index of user's definition
 			if (userDefIndex==correctDefIndex) {
 				answerScore[termIndex] = 1; //score as correct
+				term.setAttribute("correct", true);
+			}
+			else {
+				term.setAttribute("correct", false);
 			}
 
 		}

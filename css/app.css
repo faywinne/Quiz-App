@@ -38,7 +38,7 @@ html, body {
 	bottom: 0;
 	left: 0;
 	right: 0;
-	margin: auto;	
+	margin: auto;
 	padding: 20px;
 	display: table;
 }
@@ -77,11 +77,11 @@ html, body {
 	margin-top: 2px;
 	margin-right: 2px;
 	font-size: 0.8em;
-	
+
 }
 
 .header {
-	
+
 }
 
 .headerRow {
@@ -94,11 +94,11 @@ html, body {
 }
 
 #score {
-	
+
 }
 
 #undo {
-	cursor: pointer;	
+	cursor: pointer;
 }
 
 .headerRight {
@@ -129,11 +129,11 @@ html, body {
 	padding: 10px 10px 0px 10px;
 	color: #ffffff;
 	font-weight: bold;
-	
+
 }
 
 .termWidget {
-	
+
 	vertical-align: middle;
 	display: table-cell;
 	text-align: center;
@@ -144,7 +144,7 @@ html, body {
 	display: block;
 	width: 100%;
 	margin-bottom: 10px;
-	-webkit-user-select: none; /* Safari */        
+	-webkit-user-select: none; /* Safari */
 	-moz-user-select: none; /* Firefox */
 	-ms-user-select: none; /* IE10+/Edge */
 	user-select: none; /* Standard */
@@ -152,15 +152,15 @@ html, body {
 }
 
 .definitionWidget {
-	width: 100%;	
+	width: 100%;
 	// background-color: #999999;
 	color: #ffffff;
-	-webkit-user-select: none; /* Safari */        
+	-webkit-user-select: none; /* Safari */
 	-moz-user-select: none; /* Firefox */
 	-ms-user-select: none; /* IE10+/Edge */
 	user-select: none; /* Standard */
 	cursor: pointer;
-	
+
 }
 
 .droppedTerm {
@@ -171,7 +171,7 @@ html, body {
 	padding: 10px;
 	color: black;
 	height: inherit;
-	-webkit-user-select: none; /* Safari */        
+	-webkit-user-select: none; /* Safari */
 	-moz-user-select: none; /* Firefox */
 	-ms-user-select: none; /* IE10+/Edge */
 	user-select: none; /* Standard */
@@ -184,10 +184,17 @@ html, body {
 	float: right;
 	margin-bottom: 10px;
 	padding: 10px;
-	-webkit-user-select: none; /* Safari */        
+	-webkit-user-select: none; /* Safari */
 	-moz-user-select: none; /* Firefox */
 	-ms-user-select: none; /* IE10+/Edge */
 	user-select: none; /* Standard */
 	cursor: pointer;
 }
 
+div[correct=true] {
+	background-color: green;
+}
+
+div[correct=false] {
+	background-color: red;
+}
