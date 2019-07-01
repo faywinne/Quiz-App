@@ -1,9 +1,12 @@
 $.ready(function() {
 	$.get('title').innerHTML = $.string.format("Quiz Game {0}", $.getVersion());
 
+	var actionHistory = [];
+	var termsContainer = $.get("termsContainer");
+
 	$.get('controlButton').addEventListener("click",
 		function() {
-			console.log("controlButton clicked");
+			console.log("actionHistory("+ actionHistory.length +"):" + actionHistory);
 		}
 		,false);
 
@@ -41,11 +44,13 @@ $.ready(function() {
 			//e.target.innerHTML = dragEl.innerHTML;
 			//dragEl.innerHTML = "";
 			if (dragEl.id.includes("new")) {
+				actionHistory.push([data,dragEl.parentNode.id,e.target.id]);
 				e.target.appendChild(dragEl);
 			}
 			else {
 				e.target.appendChild(copyTerm(dragEl));
 				hideTerm(dragEl);
+				actionHistory.push([data,termsContainer.id,e.target.id]);
 			}
 		}
 	}
@@ -55,6 +60,7 @@ $.ready(function() {
 		var data = e.dataTransfer.getData("text"); //id of dragged item
 		var dragEl = $.get(data);
 		if (data.includes("new")){
+			actionHistory.push([data,dragEl.parentNode.id,termsContainer.id]);
 			var original = $.get(data.substring(4));
 			restoreTerm(original);
 			dragEl.remove();
@@ -73,7 +79,7 @@ $.ready(function() {
 		dropArea.addEventListener("drop", dropItemFunc, false);
 		dropArea.addEventListener("dragover", dragOverItemFunc, false);
 	}
-	var termsContainer = $.get("termsContainer");
+
 	termsContainer.addEventListener("drop", returnDropItemFunc, false);
 	termsContainer.addEventListener("dragover", dragOverItemFunc, false);
 });
