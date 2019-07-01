@@ -4,6 +4,8 @@ $.ready(function() {
 	var actionHistory = [];
 	var termsContainer = $.get("termsContainer");
 
+	setupQuiz();
+
 	$.get('undo').addEventListener("click",
 		function() {
 			console.log("actionHistory("+ actionHistory.length +"):" + actionHistory);
@@ -94,10 +96,33 @@ $.ready(function() {
 		e.preventDefault();
 	}
 
+	function setupQuiz() {
+		var terms = termsContainer.getElementsByClassName("termWidget");
+		for (var i = 0; i < terms.length; i++) {
+			hideTerm(terms[i]);
+		}
+	}
+
+	function startQuiz() {
+		var terms = termsContainer.getElementsByClassName("termWidget");
+		for (var i = 0; i < terms.length; i++) {
+			restoreTerm(terms[i]);
+		}
+	}
+
+	function endQuiz() {
+
+	}
+
+	function score() {
+
+	}
+
 	var changeButton = function(e) {
 		var val = e.target.value;
 		switch(val) {
 			case "Play":
+				startQuiz();
 				e.target.value = "End";
 			break;
 			case "End":
