@@ -4,6 +4,7 @@ $.ready(function() {
 	var actionHistory = [], //stack for redo
 	 termsContainer = $.get("termsContainer"), //reference to terms starting area
 	 timeDisplay = $.get("elapsedTime"), //reference to timer display
+	 timerInterval, //holds interval function for timer
 	 timerStart; //holds time quiz is started
 	const quizDuration = 5*60*1000; //quiz time limit, in ms
 
@@ -120,6 +121,22 @@ $.ready(function() {
 		}
 	}
 
+	function timer() {
+		//get elapsed time, comes as milliseconds
+		let timeElapsed = Date.now() - timerStart;
+
+		//convert to seconds
+		let remaining = (quizDuration - timeElapsed) / 1000;
+		let h = parseInt(remaining / 3600); //divide to get hours
+		let m = parseInt( (remaining % 3600) / 60); //divide remainder to get minutes
+		let s = parseInt( (remaining % 3600) % 60); //divide that remainder to get seconds
+
+		//put on page
+		let textString = padTimer(h) + ":" + padTimer(m) + ":" + padTimer(s);
+		console.log(textString);
+		timeDisplay.innerText = textString;
+	}
+
 	function startQuiz() {
 		var button = $.get('controlButton');
 		button.value="End";
@@ -131,24 +148,8 @@ $.ready(function() {
 
 		//initialize start time
 		timerStart = Date.now();
-
-		function timer() {
-			//get elapsed time, comes as milliseconds
-			let timeElapsed = Date.now() - timerStart;
-
-			//convert to seconds
-			let remaining = (quizDuration - timeElapsed) / 1000;
-			let h = parseInt(remaining / 3600); //divide to get hours
-			let m = parseInt( (remaining % 3600) / 60); //divide remainder to get minutes
-			let s = parseInt( (remaining % 3600) % 60); //divide that remainder to get seconds
-
-			//put on page
-			let textString = padTimer(h) + ":" + padTimer(m) + ":" + padTimer(s);
-			console.log(textString);
-			timeDisplay.innerText = textString;
-		}
 		timer();
-		setInterval(timer,1000);
+		timerInterval = setInterval(timer,1000);
 	}
 
 	//pad time display value with leading zero if needed
@@ -170,6 +171,7 @@ $.ready(function() {
 		for (var i = 0; i < terms.length; i++) {
 			terms[i].draggable = false;
 		}
+		clearInterval(timerInterval);
 	}
 
 	function scoreQuiz() {
