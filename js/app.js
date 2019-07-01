@@ -6,7 +6,7 @@ $.ready(function() {
 	 timeDisplay = $.get("elapsedTime"), //reference to timer display
 	 timerInterval, //holds interval function for timer
 	 timerStart; //holds time quiz is started
-	const quizDuration = 10*1000; //quiz time limit, in ms
+	const quizDuration = 5*60*1000; //quiz time limit, in ms
 
 	//load quiz for first playthrough
 	setupQuiz();
