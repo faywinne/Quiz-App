@@ -16,6 +16,44 @@ $.ready(function() {
 	 DISPLAYTIMEDEFAULT = "--:--:--",
 	 NUMPROBLEMS = 5;
 
+	 // the AJAX functionality a browser provides via JS
+ 	var xhr = new XMLHttpRequest();
+ 	// when status == 200, the file is loaded successfully
+ 	// the callback will be executed;
+
+ 	xhr.successCallBack = function() {
+ 		console.log(xhr.responseText);
+ 		var obj = JSON.parse(xhr.responseText);
+ 		debugger;
+ 	}
+
+ 	// hitting a failure
+ 	xhr.failureCallback = function() {
+ 		console.log('Request failed.  Returned status of ' + xhr.status);
+ 	}
+ 	// setting up the file to load
+ 	// this will fail
+ 	// xhr.open('GET', 'data/simple_ajax_1.json');
+
+ 	xhr.open('GET', 'data/quiz.json');
+
+ 	// setting up the event and wait for the file to load
+
+ 	xhr.onerror = function() {
+ 		console.log("AJAX error");
+ 		console.log("status = " + xhr.status);
+ 	}
+
+ 	xhr.onload = function() {
+ 		if (xhr.status === 200) {
+ 			xhr.successCallBack();
+ 		}
+ 		else {
+ 			xhr.failureCallback();
+ 		}
+ 	};
+	xhr.send();
+
 	//load quiz for first playthrough
 	setupQuiz();
 
