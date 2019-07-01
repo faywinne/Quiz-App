@@ -7,9 +7,6 @@ $.ready(function() {
 		}
 		,false);
 
-	var dragItem = document.getElementById("termWidget1");
-	var dropArea = document.getElementById("definitionWidget1");
-
 	function startDragItemFunc(e) {
 		//e.target is dragged item
 		console.log("drag start:" + e.target.id);
@@ -31,7 +28,12 @@ $.ready(function() {
 		e.preventDefault();
 	}
 
-	dragItem.addEventListener("dragstart", startDragItemFunc, false);
-	dropArea.addEventListener("drop", dropItemFunc, false);
-	dropArea.addEventListener("dragover", dragOverItemFunc, false);
+	for (var i=1; i<=5; i++) {
+		var dragItem = document.getElementById("termWidget"+i);
+		dragItem.addEventListener("dragstart", startDragItemFunc, false);
+
+		var dropArea = document.getElementById("definitionWidget"+i);
+		dropArea.addEventListener("drop", dropItemFunc, false);
+		dropArea.addEventListener("dragover", dragOverItemFunc, false);
+	}
 });
