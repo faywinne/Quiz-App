@@ -14,17 +14,20 @@ $.ready(function() {
 	}
 
 	function dropItemFunc(e) {
-		//e.target is receiving item
-		e.preventDefault();
-		console.log("drag end on:" + e.target.id);
-		var data = e.dataTransfer.getData("text");
-		var dragEl = $.get(data);
-		//e.target.innerHTML = dragEl.innerHTML;
-		//dragEl.innerHTML = "";
-		var newDragEl = dragEl.cloneNode(true);
-		newDragEl.id = "new_"+data;
-		e.target.appendChild(newDragEl);
-		dragEl.style.visibility = "hidden";
+		if (!e.target.hasChildNodes()) {
+			//e.target is receiving item
+			e.preventDefault();
+			console.log("drag end on:" + e.target.id);
+			var data = e.dataTransfer.getData("text");
+			var dragEl = $.get(data);
+			//e.target.innerHTML = dragEl.innerHTML;
+			//dragEl.innerHTML = "";
+			var newDragEl = dragEl.cloneNode(true);
+			newDragEl.id = "new_"+data;
+			e.target.appendChild(newDragEl);
+			dragEl.style.visibility = "hidden";
+			dragEl.style.draggable = "false";
+		}
 	}
 
 	function dragOverItemFunc(e) {
