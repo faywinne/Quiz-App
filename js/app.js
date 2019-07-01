@@ -18,7 +18,7 @@ $.ready(function() {
 		e.preventDefault();
 		console.log("drag end on:" + e.target.id);
 		var data = e.dataTransfer.getData("text");
-		var dragEl = document.getElementById(data);
+		var dragEl = $.get(data);
 		//e.target.innerHTML = dragEl.innerHTML;
 		//dragEl.innerHTML = "";
 		e.target.appendChild(dragEl);
@@ -29,10 +29,10 @@ $.ready(function() {
 	}
 
 	for (var i=1; i<=5; i++) {
-		var dragItem = document.getElementById("termWidget"+i);
+		var dragItem = $.get("termWidget"+i);
 		dragItem.addEventListener("dragstart", startDragItemFunc, false);
 
-		var dropArea = document.getElementById("definitionWidget"+i);
+		var dropArea = $.get("definitionWidget"+i);
 		dropArea.addEventListener("drop", dropItemFunc, false);
 		dropArea.addEventListener("dragover", dragOverItemFunc, false);
 	}
