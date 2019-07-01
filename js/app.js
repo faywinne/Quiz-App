@@ -17,27 +17,26 @@ $.ready(function() {
 		}
 		,false);
 
-	/*
 	function undo() {
 		let lastAction = actionHistory.pop(),
 		termId = lastAction[0],
 		sourceId = lastAction[1],
 		destinationId = lastAction[2];
+		var term = $.get(termId);
 
 		if (sourceId.includes("termsContainer")) { //A->B
-			var term = $.get(termId);
 			restoreTerm(term);
 			$.get("new_"+termId).remove();
 		}
 		else if (destinationId.includes("termsContainer")) { //B->A
-
+			$.get(sourceId).appendChild(copyTerm(term));
+			hideTerm(term);
 		}
 		else
 		{
-
+			$.get(sourceId).appendChild($.get("new_"+termId));
 		}
 	}
-	*/
 
 	function startDragItemFunc(e) {
 		//e.target is dragged item
