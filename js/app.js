@@ -10,6 +10,35 @@ $.ready(function() {
 		}
 		,false);
 
+	$.get('undo').addEventListener("click",
+		function() {
+			console.log("actionHistory("+ actionHistory.length +"):" + actionHistory);
+			undo();
+		}
+		,false);
+
+	/*
+	function undo() {
+		let lastAction = actionHistory.pop(),
+		termId = lastAction[0],
+		sourceId = lastAction[1],
+		destinationId = lastAction[2];
+
+		if (sourceId.includes("termsContainer")) { //A->B
+			var term = $.get(termId);
+			restoreTerm(term);
+			$.get("new_"+termId).remove();
+		}
+		else if (destinationId.includes("termsContainer")) { //B->A
+
+		}
+		else
+		{
+
+		}
+	}
+	*/
+
 	function startDragItemFunc(e) {
 		//e.target is dragged item
 		console.log("drag start:" + e.target.id);
@@ -44,7 +73,8 @@ $.ready(function() {
 			//e.target.innerHTML = dragEl.innerHTML;
 			//dragEl.innerHTML = "";
 			if (dragEl.id.includes("new")) {
-				actionHistory.push([data,dragEl.parentNode.id,e.target.id]);
+				var originalId = data.substring(4);
+				actionHistory.push([originalId,dragEl.parentNode.id,e.target.id]);
 				e.target.appendChild(dragEl);
 			}
 			else {
@@ -60,8 +90,8 @@ $.ready(function() {
 		var data = e.dataTransfer.getData("text"); //id of dragged item
 		var dragEl = $.get(data);
 		if (data.includes("new")){
-			actionHistory.push([data,dragEl.parentNode.id,termsContainer.id]);
 			var original = $.get(data.substring(4));
+			actionHistory.push([original.id,dragEl.parentNode.id,termsContainer.id]);
 			restoreTerm(original);
 			dragEl.remove();
 		}
