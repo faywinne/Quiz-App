@@ -3,7 +3,7 @@
  * @param {string} author - Claude Gauthier
  * @param {string} email -	claude_r_gauthier@hotmail.com
  * @param {string} date -	2013-12-10
- * 
+ *
  */
 (function(window) {
 	var	document = window.document;
@@ -20,7 +20,7 @@
 				launchFn = fn;
 			},
 			getReadyState: function() {
-				return isReady;				
+				return isReady;
 			},
 			// get will be set using NormalizeAPI()
 			get: null,
@@ -51,27 +51,27 @@
 					return false;
 				}
 				return true;
-			},			
+			},
 			isObjectType: function(obj, type) {
 				var val = false;
 				if(obj == undefined || obj == null) {
 					return val;
-				}				
+				}
 				if($.getConstructorName(obj) == type) {
 					val = true;
 				}
-				return val;				
-			},	
-			// object type inspection		
+				return val;
+			},
+			// object type inspection
 			isArray: function(obj) {
 				return $.isObjectType(obj, "array");
 			},
 			isString: function(obj) {
 				return $.isObjectType(obj, "string");
-			},	
+			},
 			isObject: function(obj) {
 				return $.isObjectType(obj, "object");
-			},			
+			},
 			// clone Object
 			cloneObject: function(obj) {
 				if(obj == null || $.isObject(obj) == false) {
@@ -103,7 +103,7 @@
 		launchFn.call(DMJS);
 	}
 		/** in order to deal with cross browser issues
-			i'm using feature detection in order to 
+			i'm using feature detection in order to
 			assign proper functionality to the methods */
 	var normalizeAPI = function() {
 		// set GET method
@@ -111,19 +111,19 @@
 		var getFn,
 			addEventFn,
 			removeEventFn;
-			
+
 		// giving precedence to document.all for Windows CE IE browsers
 		if(document.getElementById) {
 			getFn = function(id) {
 				return document.getElementById(id);
 			}
-		
+
 		} else {
 			if(document.all) {
 				getFn = function(id) {
 					return document.all[id];
 				}
-			}				
+			}
 		}
 		DMJS.get = getFn;
 		if(document.addEventListener) {
@@ -131,11 +131,11 @@
 				el.addEventListener(type, fn, false);
 				return fn;
 			}
-			
+
 			removeEventFn = function(el, type, fn) {
 				el.removeEventListener(type, fn, false);
 			}
-			
+
 		} else {
 			if(document.attachEvent) {
 				addEventFn = function (el, type, fn) {
@@ -145,7 +145,7 @@
 					el.attachEvent("on" + type, temp);
 					return temp;
 				}
-				
+
 				removeEventFn = function(el, type, fn) {
 					el.detachEvent("on" + type, fn);
 				}
@@ -155,10 +155,10 @@
 		DMJS.removeEvent = removeEventFn;
 	};
 	normalizeAPI();
-	
+
 	if(typeof window === "object" && typeof window.document === "object" ) {
 		window.DMJS = window.$ = DMJS;
 	}
 	window.onload = initDMJS;
-	
+
 })(window);
