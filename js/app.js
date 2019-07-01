@@ -18,19 +18,30 @@ $.ready(function() {
 		item.style.draggable = "false";
 	}
 
+	function copyTerm(item) {
+		var newDragEl = item.cloneNode(true);
+		newDragEl.id = "new_"+item.id;
+		newDragEl.style.draggable = "true";
+		newDragEl.addEventListener("dragstart", startDragItemFunc, false);
+		return newDragEl;
+	}
+
 	function dropItemFunc(e) {
 		e.preventDefault();
 		if (!e.target.hasChildNodes()) {
 			//e.target is receiving item
 			console.log("drag end on:" + e.target.id);
-			var data = e.dataTransfer.getData("text");
+			var data = e.dataTransfer.getData("text"); //id of dragged item
 			var dragEl = $.get(data);
 			//e.target.innerHTML = dragEl.innerHTML;
 			//dragEl.innerHTML = "";
-			var newDragEl = dragEl.cloneNode(true);
-			newDragEl.id = "new_"+data;
-			e.target.appendChild(newDragEl);
-			hideTerm(dragEl);
+			if (dragEl.id.includes("new")) {
+				e.target.appendChild(dragEl);
+			}
+			else {
+				e.target.appendChild(copyTerm(dragEl));
+				hideTerm(dragEl);
+			}
 		}
 	}
 
