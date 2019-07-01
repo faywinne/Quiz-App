@@ -2,6 +2,7 @@ $.ready(function() {
 	$.get('title').innerHTML = $.string.format("Quiz Game {0}", $.getVersion());
 
 	var actionHistory = [], //stack for redo
+	answerMap = [],
 	 termsContainer = $.get("termsContainer"), //reference to terms starting area
 	 timeDisplay = $.get("elapsedTime"), //reference to timer display
 	 timerInterval, //holds interval function for timer
@@ -68,6 +69,7 @@ $.ready(function() {
 		return newDragEl;
 	}
 
+	//called when moving a term widget to a container on the right
 	function dropItemFunc(e) {
 		e.preventDefault();
 		if (!e.target.hasChildNodes()) {
@@ -90,26 +92,48 @@ $.ready(function() {
 		}
 	}
 
+	//called when a term widget is dragged back to source container
 	function returnDropItemFunc(e) {
 		e.preventDefault();
 		var data = e.dataTransfer.getData("text"); //id of dragged item
 		var dragEl = $.get(data);
+
+		//if what you're dragging came from the right/definitions container
 		if (data.includes("new")){
+			//locate originating term widget
 			var original = $.get(data.substring(4));
 			actionHistory.push([original.id,dragEl.parentNode.id,termsContainer.id]);
+			//restore term widget which was hidden this whole time
 			restoreTerm(original);
 			dragEl.remove();
 		}
 	}
 
+	//prevent default triggers when dragging an item
 	function dragOverItemFunc(e) {
 		e.preventDefault();
 	}
 
+	//called to get quiz ready to play
+	//once when page loads, and then each time player selects continue
 	function setupQuiz() {
+		//fix button state
 		var button = $.get('controlButton');
 		button.value="Play";
 		button.disabled=false;
+
+		//load quiz problems here
+		//answers matched to definitions based on server side memory of number pairs
+		//as opposed to having correct pairs having matching indeces which could be inspected by user
+		answerMap = []; //clear answers
+		for (var i=0; i<5; i++) {
+			answerMap.push(i);
+		}
+		//correct definition for term 1 is the number located in answerMap[1]
+		console.log(answerMap);
+
+		//clear any prior moves
+		//lock and hide terms
 		var terms = document.getElementsByClassName("termWidget");
 		for (var i = 0; i < terms.length; i++) {
 			let term = terms[i];
@@ -120,6 +144,8 @@ $.ready(function() {
 				hideTerm(term);
 			}
 		}
+		//blank out timer display
+		timeDisplay.innerText = displayTimeDefault;
 	}
 
 	//processes timer each interval
@@ -158,7 +184,8 @@ $.ready(function() {
 		//initialize start time
 		timerStart = Date.now();
 		timer();
-		timerInterval = setInterval(timer,1000);
+		let refreshInterval = 1000/30; //update time at 30 fps
+		timerInterval = setInterval(timer,refreshInterval);
 	}
 
 	//pad time display value with leading zero if needed
@@ -210,7 +237,11 @@ $.ready(function() {
 			break;
 		}
 	}
+
+	//bind button to the function to change state
 	$.get('controlButton').addEventListener("click", changeButton, false);
+
+	//eventListeners for all the terms and definitions
 	for (var i=1; i<=5; i++) {
 		var dragItem = $.get("termWidget"+i);
 		dragItem.addEventListener("dragstart", startDragItemFunc, false);
