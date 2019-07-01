@@ -14,9 +14,9 @@ $.ready(function() {
 	}
 
 	function dropItemFunc(e) {
+		e.preventDefault();
 		if (!e.target.hasChildNodes()) {
 			//e.target is receiving item
-			e.preventDefault();
 			console.log("drag end on:" + e.target.id);
 			var data = e.dataTransfer.getData("text");
 			var dragEl = $.get(data);
