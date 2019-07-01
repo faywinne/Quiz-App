@@ -4,12 +4,6 @@ $.ready(function() {
 	var actionHistory = [];
 	var termsContainer = $.get("termsContainer");
 
-	$.get('controlButton').addEventListener("click",
-		function() {
-			console.log("actionHistory("+ actionHistory.length +"):" + actionHistory);
-		}
-		,false);
-
 	$.get('undo').addEventListener("click",
 		function() {
 			console.log("actionHistory("+ actionHistory.length +"):" + actionHistory);
@@ -46,12 +40,12 @@ $.ready(function() {
 
 	function hideTerm(item) {
 		item.style.visibility = "hidden";
-		item.style.draggable = "false";
+		item.style.draggable = false;
 	}
 
 	function restoreTerm(item) {
 		item.style.visibility = "visible";
-		item.style.draggable = "true";
+		item.style.draggable = true;
 	}
 
 	function copyTerm(item) {
@@ -100,6 +94,22 @@ $.ready(function() {
 		e.preventDefault();
 	}
 
+	var changeButton = function(e) {
+		var val = e.target.value;
+		switch(val) {
+			case "Play":
+				e.target.value = "End";
+			break;
+			case "End":
+				e.target.value = "Score";
+			break;
+			case "Score":
+				e.target.value = "Play";
+				e.target.disabled = true;
+			break;
+		}
+	}
+	$.get('controlButton').addEventListener("click", changeButton, false);
 	for (var i=1; i<=5; i++) {
 		var dragItem = $.get("termWidget"+i);
 		dragItem.addEventListener("dragstart", startDragItemFunc, false);
