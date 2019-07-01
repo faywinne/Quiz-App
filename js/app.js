@@ -18,6 +18,11 @@ $.ready(function() {
 		item.style.draggable = "false";
 	}
 
+	function restoreTerm(item) {
+		item.style.visibility = "visible";
+		item.style.draggable = "true";
+	}
+
 	function copyTerm(item) {
 		var newDragEl = item.cloneNode(true);
 		newDragEl.id = "new_"+item.id;
@@ -45,6 +50,17 @@ $.ready(function() {
 		}
 	}
 
+	function returnDropItemFunc(e) {
+		e.preventDefault();
+		var data = e.dataTransfer.getData("text"); //id of dragged item
+		var dragEl = $.get(data);
+		if (data.includes("new")){
+			var original = $.get(data.substring(4));
+			restoreTerm(original);
+			dragEl.remove();
+		}
+	}
+
 	function dragOverItemFunc(e) {
 		e.preventDefault();
 	}
@@ -57,4 +73,7 @@ $.ready(function() {
 		dropArea.addEventListener("drop", dropItemFunc, false);
 		dropArea.addEventListener("dragover", dragOverItemFunc, false);
 	}
+	var termsContainer = $.get("termsContainer");
+	termsContainer.addEventListener("drop", returnDropItemFunc, false);
+	termsContainer.addEventListener("dragover", dragOverItemFunc, false);
 });
