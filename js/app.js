@@ -7,6 +7,7 @@ $.ready(function() {
 	 termsContainer = $.get("termsContainer"), //reference to terms starting area
 	 buttonUndo = $.get("undo"),
 	 buttonControl = $.get("controlButton"),
+	 scoreText = $.get("score"),
 	 timeDisplay = $.get("elapsedTime"), //reference to timer display
 	 timerInterval, //holds interval function for timer
 	 timerStart; //holds time quiz is started
@@ -232,8 +233,42 @@ $.ready(function() {
 
 		answerScore = []; //clear scoring
 		for (var i=0; i<NUMPROBLEMS; i++) {
-			//calc scoring
+			answerScore.push(0);
+			//each key(=term) defaults to wrong until checked
 		}
+		var definitionsContainer = $.get("definitionsContainer");
+		var assignedTerms = definitionsContainer.getElementsByClassName("termWidget");
+		for (var i=0; i<assignedTerms.length; i++) {
+			//calc scoring
+			let term = assignedTerms[i]; //term being evaluated
+			let termIndex = term.getAttribute("index"); //index of term
+			let correctDefIndex = answerMap[termIndex]; //index of correct definition
+			let userDefIndex = term.parentNode.getAttribute("index"); //index of user's definition
+			if (userDefIndex==correctDefIndex) {
+				answerScore[termIndex] = 1; //score as correct
+			}
+
+		}
+		scoreText.innerText = scoreMessage(); //update score text area on page
+	}
+
+	function scoreMessage() {
+		let sum = 0;
+		for (var i=0; i<answerScore.length; i++) {
+			sum += answerScore[i];
+		}
+		let message = "";
+		if (sum >= NUMPROBLEMS) {
+			message = "Perfect Score!";
+		}
+		else {
+			message = "You have " + sum + " correct answer";
+			if (sum > 1) {
+				message = message + "s";
+			}
+			message = message + ".";
+		}
+		return message;
 	}
 
 	var changeButton = function(e) {
