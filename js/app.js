@@ -13,6 +13,11 @@ $.ready(function() {
 		e.dataTransfer.setData("text", e.target.id);
 	}
 
+	function hideTerm(item) {
+		item.style.visibility = "hidden";
+		item.style.draggable = "false";
+	}
+
 	function dropItemFunc(e) {
 		e.preventDefault();
 		if (!e.target.hasChildNodes()) {
@@ -25,8 +30,7 @@ $.ready(function() {
 			var newDragEl = dragEl.cloneNode(true);
 			newDragEl.id = "new_"+data;
 			e.target.appendChild(newDragEl);
-			dragEl.style.visibility = "hidden";
-			dragEl.style.draggable = "false";
+			hideTerm(dragEl);
 		}
 	}
 
