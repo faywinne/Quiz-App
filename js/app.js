@@ -2,13 +2,18 @@ $.ready(function() {
 	$.get('title').innerHTML = $.string.format("Quiz Game {0}", $.getVersion());
 
 	var actionHistory = [], //stack for redo
-	answerMap = [],
+	 answerMap = [], //correct answers, a[key]:value === a[term]:definition
+	 answerScore = [], //key(index) for each term, 1 correct, 0 incorrect
 	 termsContainer = $.get("termsContainer"), //reference to terms starting area
+	 buttonUndo = $.get("undo"),
+	 buttonControl = $.get("controlButton"),
 	 timeDisplay = $.get("elapsedTime"), //reference to timer display
 	 timerInterval, //holds interval function for timer
 	 timerStart; //holds time quiz is started
-	const quizDuration = 5*60*1000, //quiz time limit, in ms
-	displayTimeDefault = "--:--:--";
+
+	const QUIZDURATION = 5*60*1000, //quiz time limit, in ms
+	 DISPLAYTIMEDEFAULT = "--:--:--",
+	 NUMPROBLEMS = 5;
 
 	//load quiz for first playthrough
 	setupQuiz();
@@ -118,15 +123,16 @@ $.ready(function() {
 	//once when page loads, and then each time player selects continue
 	function setupQuiz() {
 		//fix button state
-		var button = $.get('controlButton');
+		var button = buttonControl;
 		button.value="Play";
 		button.disabled=false;
+		buttonUndo.disabled=true;
 
 		//load quiz problems here
 		//answers matched to definitions based on server side memory of number pairs
 		//as opposed to having correct pairs having matching indeces which could be inspected by user
 		answerMap = []; //clear answers
-		for (var i=0; i<5; i++) {
+		for (var i=0; i<NUMPROBLEMS; i++) {
 			answerMap.push(i);
 		}
 		//correct definition for term 1 is the number located in answerMap[1]
@@ -145,7 +151,7 @@ $.ready(function() {
 			}
 		}
 		//blank out timer display
-		timeDisplay.innerText = displayTimeDefault;
+		timeDisplay.innerText = DISPLAYTIMEDEFAULT;
 	}
 
 	//processes timer each interval
@@ -153,12 +159,12 @@ $.ready(function() {
 		//get elapsed time, comes as milliseconds
 		let timeElapsed = Date.now() - timerStart;
 
-		if (timeElapsed >= quizDuration) {
+		if (timeElapsed >= QUIZDURATION) {
 			endQuiz();
 			return;
 		}
 		//convert to seconds
-		let remaining = (quizDuration - timeElapsed) / 1000;
+		let remaining = (QUIZDURATION - timeElapsed) / 1000;
 		let h = parseInt(remaining / 3600); //divide to get hours
 		let m = parseInt( (remaining % 3600) / 60); //divide remainder to get minutes
 		let s = parseInt( (remaining % 3600) % 60); //divide that remainder to get seconds
@@ -171,9 +177,10 @@ $.ready(function() {
 	//called when play is pressed
 	function startQuiz() {
 		//fix button state
-		var button = $.get('controlButton');
+		var button = buttonControl;
 		button.value="End";
 		button.disabled=false;
+		buttonUndo.disabled=false;
 
 		//unlock and display all terms
 		var terms = termsContainer.getElementsByClassName("termWidget");
@@ -202,9 +209,10 @@ $.ready(function() {
 	//called when either end is pressed, or timer expires
 	function endQuiz() {
 		//fix button state
-		var button = $.get('controlButton');
+		var button = buttonControl;
 		button.value="Score";
 		button.disabled=false;
+		buttonUndo.disabled=true;
 		//lock all term widgets
 		var terms = document.getElementsByClassName("termWidget");
 		for (var i = 0; i < terms.length; i++) {
@@ -218,9 +226,14 @@ $.ready(function() {
 	//called when Score is pressed
 	function scoreQuiz() {
 		//fix button state
-		var button = $.get('controlButton');
+		var button = buttonControl;
 		button.value="Start";
 		button.disabled = true;
+
+		answerScore = []; //clear scoring
+		for (var i=0; i<NUMPROBLEMS; i++) {
+			//calc scoring
+		}
 	}
 
 	var changeButton = function(e) {
@@ -239,10 +252,10 @@ $.ready(function() {
 	}
 
 	//bind button to the function to change state
-	$.get('controlButton').addEventListener("click", changeButton, false);
+	buttonControl.addEventListener("click", changeButton, false);
 
 	//eventListeners for all the terms and definitions
-	for (var i=1; i<=5; i++) {
+	for (var i=1; i<=NUMPROBLEMS; i++) {
 		var dragItem = $.get("termWidget"+i);
 		dragItem.addEventListener("dragstart", startDragItemFunc, false);
 
