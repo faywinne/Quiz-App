@@ -1,8 +1,11 @@
 $.ready(function() {
 	$.get('title').innerHTML = $.string.format("Quiz Game {0}", $.getVersion());
 
-	var actionHistory = [];
-	var termsContainer = $.get("termsContainer");
+	var actionHistory = [],
+	 termsContainer = $.get("termsContainer"),
+	 timerStart,
+	 timerElapsed;
+	const quizDuration = 5*60*1000; //ms
 
 	setupQuiz();
 
@@ -100,9 +103,15 @@ $.ready(function() {
 		var button = $.get('controlButton');
 		button.value="Play";
 		button.disabled=false;
-		var terms = termsContainer.getElementsByClassName("termWidget");
+		var terms = document.getElementsByClassName("termWidget");
 		for (var i = 0; i < terms.length; i++) {
-			hideTerm(terms[i]);
+			let term = terms[i];
+			if(term.id.includes("new") ) {
+				term.remove();
+			}
+			else {
+				hideTerm(term);
+			}
 		}
 	}
 
@@ -114,6 +123,15 @@ $.ready(function() {
 		for (var i = 0; i < terms.length; i++) {
 			restoreTerm(terms[i]);
 		}
+
+		timerStart = Date.now();
+
+		function timer() {
+			timerElapsed = Date.now() - timerStart;
+			console.log(timerElapsed);
+		}
+		timer();
+		setInterval(timer,1000);
 	}
 
 	function endQuiz() {
