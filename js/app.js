@@ -6,7 +6,7 @@ $.ready(function() {
 	 timeDisplay = $.get("elapsedTime"), //reference to timer display
 	 timerInterval, //holds interval function for timer
 	 timerStart; //holds time quiz is started
-	const quizDuration = 5*60*1000; //quiz time limit, in ms
+	const quizDuration = 10*1000; //quiz time limit, in ms
 
 	//load quiz for first playthrough
 	setupQuiz();
@@ -121,10 +121,15 @@ $.ready(function() {
 		}
 	}
 
+	//processes timer each interval
 	function timer() {
 		//get elapsed time, comes as milliseconds
 		let timeElapsed = Date.now() - timerStart;
 
+		if (timeElapsed >= quizDuration) {
+			endQuiz();
+			return;
+		}
 		//convert to seconds
 		let remaining = (quizDuration - timeElapsed) / 1000;
 		let h = parseInt(remaining / 3600); //divide to get hours
@@ -133,14 +138,17 @@ $.ready(function() {
 
 		//put on page
 		let textString = padTimer(h) + ":" + padTimer(m) + ":" + padTimer(s);
-		console.log(textString);
 		timeDisplay.innerText = textString;
 	}
 
+	//called when play is pressed
 	function startQuiz() {
+		//fix button state
 		var button = $.get('controlButton');
 		button.value="End";
 		button.disabled=false;
+
+		//unlock and display all terms
 		var terms = termsContainer.getElementsByClassName("termWidget");
 		for (var i = 0; i < terms.length; i++) {
 			restoreTerm(terms[i]);
@@ -163,18 +171,25 @@ $.ready(function() {
 		return numString;
 	}
 
+	//called when either end is pressed, or timer expires
 	function endQuiz() {
+		//fix button state
 		var button = $.get('controlButton');
 		button.value="Score";
 		button.disabled=false;
+		//lock all term widgets
 		var terms = document.getElementsByClassName("termWidget");
 		for (var i = 0; i < terms.length; i++) {
 			terms[i].draggable = false;
 		}
+
+		//end timer
 		clearInterval(timerInterval);
 	}
 
+	//called when Score is pressed
 	function scoreQuiz() {
+		//fix button state
 		var button = $.get('controlButton');
 		button.value="Start";
 		button.disabled = true;
