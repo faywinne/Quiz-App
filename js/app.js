@@ -1,14 +1,16 @@
 $.ready(function() {
 	$.get('title').innerHTML = $.string.format("Quiz Game {0}", $.getVersion());
 
-	var actionHistory = [],
-	 termsContainer = $.get("termsContainer"),
-	 timerStart,
-	 timerElapsed;
-	const quizDuration = 5*60*1000; //ms
+	var actionHistory = [], //stack for redo
+	 termsContainer = $.get("termsContainer"), //reference to terms starting area
+	 timeDisplay = $.get("elapsedTime"), //reference to timer display
+	 timerStart; //holds time quiz is started
+	const quizDuration = 5*60*1000; //quiz time limit, in ms
 
+	//load quiz for first playthrough
 	setupQuiz();
 
+	//attach undo function to undo button
 	$.get('undo').addEventListener("click",
 		function() {
 			console.log("actionHistory("+ actionHistory.length +"):" + actionHistory);
@@ -16,24 +18,27 @@ $.ready(function() {
 		}
 		,false);
 
+	//pop from stack of moves and reverses the action
 	function undo() {
-		let lastAction = actionHistory.pop(),
-		termId = lastAction[0],
-		sourceId = lastAction[1],
-		destinationId = lastAction[2];
-		var term = $.get(termId);
+		if (actionHistory.length) {
+			let lastAction = actionHistory.pop(),
+			termId = lastAction[0], //indicates term moved
+			sourceId = lastAction[1], //indicates where it was moved from
+			destinationId = lastAction[2]; //indicates where it was moved to
+			var term = $.get(termId);
 
-		if (sourceId.includes("termsContainer")) { //A->B
-			restoreTerm(term);
-			$.get("new_"+termId).remove();
-		}
-		else if (destinationId.includes("termsContainer")) { //B->A
-			$.get(sourceId).appendChild(copyTerm(term));
-			hideTerm(term);
-		}
-		else
-		{
-			$.get(sourceId).appendChild($.get("new_"+termId));
+			if (sourceId.includes("termsContainer")) { //A->B
+				restoreTerm(term);
+				$.get("new_"+termId).remove();
+			}
+			else if (destinationId.includes("termsContainer")) { //B->A
+				$.get(sourceId).appendChild(copyTerm(term));
+				hideTerm(term);
+			}
+			else //B -> B
+			{
+				$.get(sourceId).appendChild($.get("new_"+termId));
+			}
 		}
 	}
 
@@ -124,14 +129,37 @@ $.ready(function() {
 			restoreTerm(terms[i]);
 		}
 
+		//initialize start time
 		timerStart = Date.now();
 
 		function timer() {
-			timerElapsed = Date.now() - timerStart;
-			console.log(timerElapsed);
+			//get elapsed time, comes as milliseconds
+			let timeElapsed = Date.now() - timerStart;
+
+			//convert to seconds
+			let remaining = (quizDuration - timeElapsed) / 1000;
+			let h = parseInt(remaining / 3600); //divide to get hours
+			let m = parseInt( (remaining % 3600) / 60); //divide remainder to get minutes
+			let s = parseInt( (remaining % 3600) % 60); //divide that remainder to get seconds
+
+			//put on page
+			let textString = padTimer(h) + ":" + padTimer(m) + ":" + padTimer(s);
+			console.log(textString);
+			timeDisplay.innerText = textString;
 		}
 		timer();
 		setInterval(timer,1000);
+	}
+
+	//pad time display value with leading zero if needed
+	// takes an int, outputs string
+	//example: 5 -> 05
+	function padTimer(num) {
+		let numString = num.toString();
+		while (numString.length < 2) {
+			numString = "0" + numString;
+		}
+		return numString;
 	}
 
 	function endQuiz() {
