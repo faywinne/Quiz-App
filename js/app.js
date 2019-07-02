@@ -10,11 +10,13 @@ $.ready(function() {
 	 scoreText = $.get("score"),
 	 timeDisplay = $.get("elapsedTime"), //reference to timer display
 	 timerInterval, //holds interval function for timer
-	 timerStart; //holds time quiz is started
+	 timerStart, //holds time quiz is started
+	 quizJson, //will hold parsed json object from ajax call
+	 isLoaded=false;
 
 	const QUIZDURATION = 5*60*1000, //quiz time limit, in ms
-	 DISPLAYTIMEDEFAULT = "--:--:--",
-	 NUMPROBLEMS = 5;
+	 DISPLAYTIMEDEFAULT = "--:--:--", //blank time display
+	 NUMPROBLEMS = 5; //number of quiz questions at once
 
 	 // the AJAX functionality a browser provides via JS
  	var xhr = new XMLHttpRequest();
@@ -22,9 +24,11 @@ $.ready(function() {
  	// the callback will be executed;
 
  	xhr.successCallBack = function() {
- 		console.log(xhr.responseText);
- 		var obj = JSON.parse(xhr.responseText);
- 		debugger;
+ 		//console.log(xhr.responseText);
+ 		quizJson = JSON.parse(xhr.responseText);
+		console.log("henlo json");
+		console.log(quizJson);
+		isLoaded = true;
  	}
 
  	// hitting a failure
@@ -158,6 +162,13 @@ $.ready(function() {
 		e.preventDefault();
 	}
 
+	//returns a random item from obj, removing it
+	//obj can be a json object OR an array
+	function popRandom(obj, len) {
+		let randomIndex = Math.floor(Math.random() * len); //choose a random element
+		return obj.splice(randomIndex, 1); //remove and return the element
+	}
+
 	//called to get quiz ready to play
 	//once when page loads, and then each time player selects continue
 	function setupQuiz() {
@@ -167,17 +178,7 @@ $.ready(function() {
 		button.disabled=false;
 		buttonUndo.disabled=true;
 
-		//load quiz problems here
-		//answers matched to definitions based on server side memory of number pairs
-		//as opposed to having correct pairs having matching indeces which could be inspected by user
-		answerMap = []; //clear answers
-		for (var i=0; i<NUMPROBLEMS; i++) {
-			answerMap.push(i);
-		}
-		//correct definition for term 1 is the number located in answerMap[1]
-		console.log(answerMap);
 
-		//clear any prior moves
 		//lock and hide terms
 		var terms = document.getElementsByClassName("termWidget");
 		for (var i = 0; i < terms.length; i++) {
@@ -215,23 +216,59 @@ $.ready(function() {
 
 	//called when play is pressed
 	function startQuiz() {
-		//fix button state
-		var button = buttonControl;
-		button.value="End";
-		button.disabled=false;
-		buttonUndo.disabled=false;
+		if (isLoaded) {
+			//console.log("is json loaded? " + isLoaded);
+			//console.log(quizJson);
+			//load quiz problems here
+			//first get an array of the questions to be used this session
+			let newQuestions = [],
+			 defIndexList = []; //list of index numbers to assign randomly to quiz question definitions
+			for (var i=0; i<NUMPROBLEMS; i++) {
+				var problem = popRandom(quizJson,Object.keys(quizJson).length);
+				//console.log(problem);
+				newQuestions.push(problem);
+				defIndexList.push(i);
+				//move a random element from question pool to session pool
+			}
+			console.log("questions:");
+			console.log(newQuestions);
 
-		//unlock and display all terms
-		var terms = termsContainer.getElementsByClassName("termWidget");
-		for (var i = 0; i < terms.length; i++) {
-			restoreTerm(terms[i]);
+			//answers matched to definitions based on server side memory of number pairs
+			//as opposed to having correct pairs having matching indices which could be inspected by user
+			answerMap = []; //clear answers
+			for (var i=0; i<NUMPROBLEMS; i++) {
+				let term = newQuestions[i][0].term;
+				console.log("term " + i + ":" + term);
+				let definition = newQuestions[i][0].definition;
+				$.get("termWidget"+(i+1)).innerText = term;
+				defIndex = popRandom(defIndexList, defIndexList.length);
+				answerMap.push(defIndex);
+				$.get("definitionText"+defIndex).innerText = definition;
+			}
+			//correct definition for term 1 is the number located in answerMap[1]
+
+			//clear any prior moves
+			actionHistory = [];
+
+
+			//fix button state
+			var button = buttonControl;
+			button.value="End";
+			button.disabled=false;
+			buttonUndo.disabled=false;
+
+			//unlock and display all terms
+			var terms = termsContainer.getElementsByClassName("termWidget");
+			for (var i = 0; i < terms.length; i++) {
+				restoreTerm(terms[i]);
+			}
+
+			//initialize start time
+			timerStart = Date.now();
+			timer();
+			let refreshInterval = 1000/30; //update time at 30 fps
+			timerInterval = setInterval(timer,refreshInterval);
 		}
-
-		//initialize start time
-		timerStart = Date.now();
-		timer();
-		let refreshInterval = 1000/30; //update time at 30 fps
-		timerInterval = setInterval(timer,refreshInterval);
 	}
 
 	//pad time display value with leading zero if needed
