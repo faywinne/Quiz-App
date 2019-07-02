@@ -24,10 +24,7 @@ $.ready(function() {
  	// the callback will be executed;
 
  	xhr.successCallBack = function() {
- 		//console.log(xhr.responseText);
  		quizJson = JSON.parse(xhr.responseText);
-		console.log("henlo json");
-		console.log(quizJson);
 		isLoaded = true;
  	}
 
@@ -64,7 +61,6 @@ $.ready(function() {
 	//attach undo function to undo button
 	$.get('undo').addEventListener("click",
 		function() {
-			console.log("actionHistory("+ actionHistory.length +"):" + actionHistory);
 			undo();
 		}
 		,false);
@@ -95,7 +91,6 @@ $.ready(function() {
 
 	function startDragItemFunc(e) {
 		//e.target is dragged item
-		console.log("drag start:" + e.target.id);
 		e.dataTransfer.setData("text", e.target.id);
 	}
 
@@ -122,7 +117,6 @@ $.ready(function() {
 		e.preventDefault();
 		if (!e.target.hasChildNodes()) {
 			//e.target is receiving item
-			console.log("drag end on:" + e.target.id);
 			var data = e.dataTransfer.getData("text"); //id of dragged item
 			var dragEl = $.get(data);
 			//e.target.innerHTML = dragEl.innerHTML;
@@ -217,8 +211,6 @@ $.ready(function() {
 	//called when play is pressed
 	function startQuiz() {
 		if (isLoaded) {
-			//console.log("is json loaded? " + isLoaded);
-			//console.log(quizJson);
 			//load quiz problems here
 			//first get an array of the questions to be used this session
 			let newQuestions = [],
@@ -230,15 +222,12 @@ $.ready(function() {
 				defIndexList.push(i);
 				//move a random element from question pool to session pool
 			}
-			console.log("questions:");
-			console.log(newQuestions);
 
 			//answers matched to definitions based on server side memory of number pairs
 			//as opposed to having correct pairs having matching indices which could be inspected by user
 			answerMap = []; //clear answers
 			for (var i=0; i<NUMPROBLEMS; i++) {
 				let term = newQuestions[i][0].term;
-				console.log("term " + i + ":" + term);
 				let definition = newQuestions[i][0].definition;
 				$.get("termWidget"+(i+1)).innerText = term;
 				defIndex = popRandom(defIndexList, defIndexList.length);
