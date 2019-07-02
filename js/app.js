@@ -59,7 +59,7 @@ $.ready(function() {
 	setupQuiz();
 
 	//attach undo function to undo button
-	$.get('undo').addEventListener("click",
+	buttonUndo.addEventListener("click",
 		function() {
 			undo();
 		}
@@ -96,12 +96,14 @@ $.ready(function() {
 
 	function hideTerm(item) {
 		item.style.visibility = "hidden";
-		item.style.draggable = false;
+		//item.style.draggable = false;
+		item.setAttribute("draggable", "false");
 	}
 
 	function restoreTerm(item) {
 		item.style.visibility = "visible";
-		item.style.draggable = true;
+		//item.style.draggable = true;
+		item.setAttribute("draggable","true");
 	}
 
 	function copyTerm(item) {
@@ -170,22 +172,44 @@ $.ready(function() {
 		var button = buttonControl;
 		button.value="Play";
 		button.disabled=false;
-		buttonUndo.disabled=true;
+		buttonUndo.setAttribute("disabled","true");
+		buttonUndo.setAttribute("display","none");
+		scoreText.innerText = "";
 
 
 		//lock and hide terms
+		//console.log("time to clear out session");
 		var terms = document.getElementsByClassName("termWidget");
 		for (var i = 0; i < terms.length; i++) {
-			let term = terms[i];
-			if(term.id.includes("new") ) {
-				term.remove();
+			var term = terms[i];
+			console.log("removing:" + term.getAttribute("id"));
+			if(term.getAttribute("id").includes("new") ) {
+				//term.remove();
+				term = null;
 			}
 			else {
 				hideTerm(term);
 			}
 		}
+
+		terms = document.getElementsByClassName("droppedTerm");
+		for (var i = 0; i < terms.length; i++) {
+			var term = terms[i];
+			while (term.firstChild) {
+				term.removeChild(term.firstChild);
+			}
+		}
+
+
+		terms = document.getElementsByClassName("definitionText");
+		for (var i = 0; i < terms.length; i++) {
+			let term = terms[i];
+			term.innerText = "";
+		}
+
 		//blank out timer display
 		timeDisplay.innerText = DISPLAYTIMEDEFAULT;
+		scoreText.innerText = "";
 	}
 
 	//processes timer each interval
@@ -211,6 +235,10 @@ $.ready(function() {
 	//called when play is pressed
 	function startQuiz() {
 		if (isLoaded) {
+			buttonUndo.setAttribute("disabled","false");
+			buttonUndo.setAttribute("display","inline");
+			scoreText.innerText = "";
+
 			//load quiz problems here
 			//first get an array of the questions to be used this session
 			let newQuestions = [],
@@ -250,6 +278,7 @@ $.ready(function() {
 			var terms = termsContainer.getElementsByClassName("termWidget");
 			for (var i = 0; i < terms.length; i++) {
 				restoreTerm(terms[i]);
+
 			}
 
 			//initialize start time
@@ -277,7 +306,9 @@ $.ready(function() {
 		var button = buttonControl;
 		button.value="Score";
 		button.disabled=false;
-		buttonUndo.disabled=true;
+		buttonUndo.setAttribute("disabled","true");
+		buttonUndo.setAttribute("display","none");
+
 		//lock all term widgets
 		var terms = document.getElementsByClassName("termWidget");
 		for (var i = 0; i < terms.length; i++) {
@@ -318,6 +349,15 @@ $.ready(function() {
 
 		}
 		scoreText.innerText = scoreMessage(); //update score text area on page
+
+		//check if enough questions to continue, then prompt user
+		setTimeout( function() {
+			if (Object.keys(quizJson).length >= NUMPROBLEMS && window.confirm("Would you like to play again?") ) {
+				setupQuiz();
+				scoreText.innerText = "";
+			}
+		}, 3000);
+
 	}
 
 	function scoreMessage() {
@@ -331,7 +371,7 @@ $.ready(function() {
 		}
 		else {
 			message = "You have " + sum + " correct answer";
-			if (sum > 1) {
+			if (sum != 1) {
 				message = message + "s";
 			}
 			message = message + ".";

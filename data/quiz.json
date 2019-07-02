@@ -1,31 +1,76 @@
 [{
-	"term": "Aa",
-    "definition": "defA"
+	"term": "偶然　【ぐうぜん】",
+    "definition": "coincidence"
 }, {
-	"term": "Bb",
-    "definition": "defB"
+	"term": "可能性　【かのうせい】",
+    "definition": "possibility"
 }, {
-	"term": "Cc",
-    "definition": "defC"
+	"term": "能力　【のうりょく】",
+    "definition": "ability"
 }, {
-	"term": "Dd",
-    "definition": "defD"
+	"term": "計画　【けいかく】",
+    "definition": "plan"
 }, {
-	"term": "Ee",
-    "definition": "defE"
+	"term": "裁き　【さばき】",
+    "definition": "judgement"
 }, {
-	"term": "Ff",
-    "definition": "defF"
+	"term": "罪　【つみ】",
+    "definition": "sin"
 }, {
-	"term": "Gg",
-    "definition": "defG"
+	"term": "野望　【やぼう】",
+    "definition": "ambition"
 }, {
-	"term": "Hh",
-    "definition": "defH"
+	"term": "約束　【やくそく】",
+    "definition": "promise"
 }, {
-	"term": "Ii",
-    "definition": "defI"
+	"term": "知能　【ちのう】",
+    "definition": "intelligence"
 }, {
-	"term": "Jj",
-    "definition": "defJ"
+	"term": "勢力　【せいりょく】",
+    "definition": "influence"
+}, {
+    "term": "練達　【れんたつ】",
+    "definition": "dexterity"
+}, {
+	"term": "知恵　【ちえ】",
+    "definition": "wisdom"
+}, {
+	"term": "速度　【そくど】",
+    "definition": "agility"
+}, {
+	"term": "志望　【しぼう】",
+    "definition": "wish"
+}, {
+	"term": "自信　【じしん】",
+    "definition": "confidence"
+}, {
+	"term": "驚愕　【きょうがく】",
+    "definition": "astonishment"
+}, {
+	"term": "分別　【ふんべつ】",
+    "definition": "discretion"
+}, {
+	"term": "保護　【ほご】",
+    "definition": "protection"
+}, {
+	"term": "指導　【しどう】",
+    "definition": "leadership"
+}, {
+	"term": "忠実　【ちゅうじつ】",
+    "definition": "devotion"
+}, {
+	"term": "集中　【しゅうちゅう】",
+    "definition": "concentration"
+}, {
+	"term": "競争　【きょうそう】",
+    "definition": "rivalry"
+}, {
+	"term": "勘弁　【かんべん】",
+    "definition": "forgiveness"
+}, {
+	"term": "許可　【きょか】",
+    "definition": "permission"
+}, {
+	"term": "暴動　【ぼうどう】",
+    "definition": "rebellion"
 }]
